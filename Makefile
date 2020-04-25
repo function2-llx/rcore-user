@@ -42,7 +42,7 @@ cmake_build_args += -DCMAKE_BUILD_TYPE=Debug
 endif
 
 
-.PHONY: all clean build rust ucore biscuit app bin busybox nginx redis alpine iperf3 musl-gcc musl-rust pre make
+.PHONY: all clean build rust ucore biscuit app bin busybox nginx redis alpine iperf3 musl-gcc musl-rust pre make localtime
 
 all: build
 
@@ -164,7 +164,7 @@ ifeq ($(prebuilt), 1)
 build: $(prebuilt_tar)
 	@tar -xzf $< -C build
 else
-build: pre alpine rust ucore biscuit app busybox nginx redis iperf3 test musl-gcc make # musl-rust
+build: pre alpine rust ucore biscuit app busybox nginx redis iperf3 test musl-gcc make localtime # musl-rust
 endif
 
 $(prebuilt_tar):
@@ -183,6 +183,12 @@ $(out_qcow2): $(out_img)
 
 make: 
 	cd make && make make
+
+# TODO: download from somewhere else
+localtime:
+	cp -r /usr/share/zoneinfo $(out_dir)/usr/share/zoneinfo
+	# absolute path is required
+	ln -sf /usr/share/zoneinfo/Asia/Shanghai $(out_dir)/etc/localtime
 
 pre:
 	@mkdir -p $(out_dir)
