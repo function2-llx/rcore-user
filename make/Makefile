@@ -9,7 +9,7 @@ make_dir := $(build_dir)/make-$(make_version)
 .PHONY: all clean make
 
 $(make_tarball_path):
-	mkdir -p src
+	@mkdir -p src
 	wget http://ftp.gnu.org/gnu/make/make-$(make_version).tar.gz -O $(make_tarball_path)
 
 prefix = $(shell readlink -f ../build/$(arch)/usr)

@@ -23,7 +23,7 @@ alpine_version_full := 3.10.2
 alpine_file := alpine-minirootfs-$(alpine_version_full)-$(arch).tar.gz
 alpine := alpine/$(alpine_file)
 
-musl-gcc_version := 6
+musl-gcc_version := 5
 musl-gcc_file := $(arch)-linux-musl-cross.tgz
 musl-gcc := musl-gcc/$(musl-gcc_file)
 
@@ -182,12 +182,11 @@ $(out_qcow2): $(out_img)
 	@qemu-img resize $@ +1G
 
 make: 
-	cd make && make make
+	@cd make && make make
 
 # TODO: download from somewhere else
 localtime:
 	cp -r /usr/share/zoneinfo $(out_dir)/usr/share/zoneinfo
-	# absolute path is required
 	ln -sf /usr/share/zoneinfo/Asia/Shanghai $(out_dir)/etc/localtime
 
 pre:
