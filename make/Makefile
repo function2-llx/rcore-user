@@ -1,5 +1,4 @@
-arch ?= x86_64
-make_version := 3.75
+make_version := 3.78.1
 make_tarball := make-$(make_version).tar.gz
 make_tarball_path := src/$(make_tarball)
 build_dir := build/$(arch)
