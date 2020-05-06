@@ -1,5 +1,6 @@
+arch := x86_64
 musl-gcc_version := 6
-musl-gcc_tarball := musl-gcc-$(musl-gcc_version).tgz
+musl-gcc_tarball := musl-gcc-$(musl-gcc_version)-$(arch).tgz
 musl-gcc_tarball_path := src/$(musl-gcc_tarball)
 build_dir := build/$(arch)
 musl-gcc_dir := $(build_dir)/musl-gcc/

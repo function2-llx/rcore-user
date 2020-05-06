@@ -5,6 +5,7 @@ mode ?= debug
 out_dir ?= build/$(arch)
 out_img ?= build/$(arch).img
 out_qcow2 ?= build/$(arch).qcow2
+out_qcow2_cache := $(out_qcow2).cache
 ld_path_file := $(out_dir)/etc/ld-musl-$(arch).path
 
 prebuilt_version ?= 0.1.2
@@ -23,9 +24,9 @@ alpine_version_full := 3.10.2
 alpine_file := alpine-minirootfs-$(alpine_version_full)-$(arch).tar.gz
 alpine := alpine/$(alpine_file)
 
-musl-gcc_version := 5
 musl-gcc_file := $(arch)-linux-musl-cross.tgz
-musl-gcc := musl-gcc/$(musl-gcc_file)
+musl-gcc_version := 6
+musl-gcc := musl-gcc/build/$(arch)/musl-gcc
 
 musl-rust_version := 1.42.0
 musl-rust_file := rust-$(musl-rust_version)-$(arch)-unknown-linux-musl.tar.gz
@@ -42,7 +43,7 @@ cmake_build_args += -DCMAKE_BUILD_TYPE=Debug
 endif
 
 
-.PHONY: all clean build rust ucore biscuit app bin busybox nginx redis alpine iperf3 musl-gcc musl-rust pre make localtime
+.PHONY: all clean build rust ucore biscuit app bin busybox nginx redis alpine iperf3 musl-gcc musl-rust pre make localtime cmake
 
 all: build
 
@@ -60,18 +61,22 @@ ucore:
 	@cp $(ucore_bin_path)/* $(out_dir)/ucore
 
 biscuit:
+ifneq ($(shell uname), Darwin)
 	@echo Building biscuit programs
 	@mkdir -p biscuit/build
 	@cd biscuit/build && cmake $(cmake_build_args) .. && make -j
 	@rm -rf $(out_dir)/biscuit && mkdir -p $(out_dir)/biscuit
 	@cp $(biscuit_bin_path)/* $(out_dir)/biscuit
+endif
 
 app:
+ifneq ($(shell uname), Darwin)
 	@echo Building custom test programs
 	@mkdir -p app/build
 	@cd app/build && cmake $(cmake_build_args) .. && make -j
 	@rm -rf $(out_dir)/app && mkdir -p $(out_dir)/app
 	@cp $(app_bin_path)/* $(out_dir)/app
+endif
 
 $(busybox):
 ifeq ($(arch), x86_64)
@@ -131,18 +136,16 @@ ifeq ($(arch), $(filter $(arch), x86_64 aarch64))
 	@cd $(out_dir) && tar xf ../../$(alpine)
 endif
 
-musl-gcc = musl-gcc/build/$(arch)/musl-gcc
-
 $(musl-gcc):
-	cd musl-gcc && make all
+ifeq ($(arch), $(filter $(arch), x86_64))
+	cd musl-gcc && make all arch=$(arch)
+endif
 
 musl-gcc: $(musl-gcc)
-ifneq ($(shell uname), Darwin)
 ifeq ($(arch), $(filter $(arch), x86_64))
 	@echo Building musl-gcc
 	cp -r $(musl-gcc)/* $(out_dir)/usr/
 	@mkdir -p $(out_dir)/etc
-endif
 endif
 
 musl-rust:
@@ -158,28 +161,39 @@ ifeq ($(arch), $(filter $(arch), x86_64 aarch64))
 	@echo setup test DIR
 	@mkdir -p $(out_dir)
 	@cp -r testsuits_alpine $(out_dir)/test
+	@cp test.sh $(out_dir)
 endif
 
 ifeq ($(prebuilt), 1)
 build: $(prebuilt_tar)
 	@tar -xzf $< -C build
 else
-build: pre alpine rust ucore biscuit app busybox nginx redis iperf3 test musl-gcc make localtime # musl-rust
+build: pre alpine rust ucore biscuit app busybox nginx redis iperf3 test musl-gcc make localtime musl-rust
 endif
 
 $(prebuilt_tar):
 	@mkdir -p build
 	@wget https://github.com/rcore-os/rcore-user/releases/download/v$(prebuilt_version)/$(arch).tar.gz -O $@
 
-sfsimg: $(out_qcow2)
+sfsimg:
+ifeq ($(wildcard $(out_qcow2_cache)), )
+	@make $(out_img)
+	@echo Generating sfsimg
+	@qemu-img convert -f raw $(out_img) -O qcow2 $(out_qcow2)
+	@qemu-img resize $(out_qcow2) +1G
+	cp $(out_qcow2) $(out_qcow2_cache)
+else
+	cp $(out_qcow2_cache) $(out_qcow2)
+endif
+
+# pack qcow2 and img without building again
+pack:
+	rcore-fs-fuse $(out_img) $(out_dir) zip
+	qemu-img convert -f raw $(out_img) -O qcow2 $(out_qcow2)
+	qemu-img resize $(out_qcow2) +1G
 
 $(out_img): build rcore-fs-fuse
 	rcore-fs-fuse $@ $(out_dir) zip
-
-$(out_qcow2): $(out_img)
-	@echo Generating sfsimg
-	@qemu-img convert -f raw $< -O qcow2 $@
-	@qemu-img resize $@ +1G
 
 make: 
 	@cd make && make make
@@ -189,6 +203,8 @@ localtime:
 	cp -r /usr/share/zoneinfo $(out_dir)/usr/share/zoneinfo
 	ln -sf /usr/share/zoneinfo/Asia/Shanghai $(out_dir)/etc/localtime
 
+cmake:
+	@cd cmake && make all
 pre:
 	@mkdir -p $(out_dir)
 	@mkdir -p $(out_dir)/etc
