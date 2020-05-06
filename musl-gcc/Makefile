@@ -17,7 +17,7 @@ $(musl-gcc_tarball_path):
 $(musl-gcc_dir): $(musl-gcc_tarball_path)
 	@mkdir -p $(build_dir)
 	@cd $(build_dir) && tar xvf ../../$(musl-gcc_tarball_path) && mv $(arch)-linux-musl-cross musl-gcc
-	@cd $(musl-gcc_dir)/bin && cp $(prefix)-cc cc && cp $(prefix)-ld ld && cp $(prefix)-gcc gcc && cp $(prefix)-g++ g++
+	@cd $(musl-gcc_dir)/bin && cp $(prefix)-cc cc && cp $(prefix)-ld ld && cp $(prefix)-gcc gcc && cp $(prefix)-g++ g++ && cp $(prefix)-ar ar && cp $(prefix)-ranlib ranlib
 
 all: $(musl-gcc_dir)
 

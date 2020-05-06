@@ -5,6 +5,7 @@ mode ?= debug
 out_dir ?= build/$(arch)
 out_img ?= build/$(arch).img
 out_qcow2 ?= build/$(arch).qcow2
+out_qcow2_cache := $(out_qcow2).cache
 ld_path_file := $(out_dir)/etc/ld-musl-$(arch).path
 
 prebuilt_version ?= 0.1.2
@@ -23,6 +24,7 @@ alpine_version_full := 3.10.2
 alpine_file := alpine-minirootfs-$(alpine_version_full)-$(arch).tar.gz
 alpine := alpine/$(alpine_file)
 
+musl-gcc_file := $(arch)-linux-musl-cross.tgz
 musl-gcc_version := 6
 musl-gcc := musl-gcc/build/$(arch)/musl-gcc
 
@@ -43,7 +45,7 @@ cmake_build_args += -DCMAKE_BUILD_TYPE=Debug
 endif
 
 
-.PHONY: all clean build rust ucore biscuit app bin busybox nginx redis alpine iperf3 libc-test musl-gcc musl-rust pre make localtime
+.PHONY: all clean build rust ucore biscuit app bin busybox nginx redis alpine iperf3 musl-gcc musl-rust pre make localtime cmake
 
 all: build
 
@@ -182,14 +184,23 @@ ifeq ($(prebuilt), 1)
 build: $(prebuilt_tar)
 	@tar -xzf $< -C build
 else
-build: pre alpine rust ucore biscuit app busybox nginx redis iperf3 test libc-test musl-gcc make localtime # musl-rust
+build: pre alpine rust ucore biscuit app busybox nginx redis iperf3 test musl-gcc make localtime musl-rust
 endif
 
 $(prebuilt_tar):
 	@mkdir -p build
 	@wget https://github.com/rcore-os/rcore-user/releases/download/v$(prebuilt_version)/$(arch).tar.gz -O $@
 
-sfsimg: $(out_qcow2)
+sfsimg:
+ifeq ($(wildcard $(out_qcow2_cache)), )
+	@make $(out_img)
+	@echo Generating sfsimg
+	@qemu-img convert -f raw $(out_img) -O qcow2 $(out_qcow2)
+	@qemu-img resize $(out_qcow2) +1G
+	cp $(out_qcow2) $(out_qcow2_cache)
+else
+	cp $(out_qcow2_cache) $(out_qcow2)
+endif
 
 # pack qcow2 and img without building again
 pack:
@@ -200,20 +211,16 @@ pack:
 $(out_img): build rcore-fs-fuse
 	rcore-fs-fuse $@ $(out_dir) zip
 
-$(out_qcow2): $(out_img)
-	@echo Generating sfsimg
-	@qemu-img convert -f raw $< -O qcow2 $@
-	@qemu-img resize $@ +1G
-
 make: 
-	cd make && make make
+	@cd make && make make
 
 # TODO: download from somewhere else
 localtime:
 	cp -r /usr/share/zoneinfo $(out_dir)/usr/share/zoneinfo
-	# absolute path is required
 	ln -sf /usr/share/zoneinfo/Asia/Shanghai $(out_dir)/etc/localtime
 
+cmake:
+	@cd cmake && make all
 pre:
 	@mkdir -p $(out_dir)
 	@mkdir -p $(out_dir)/etc
