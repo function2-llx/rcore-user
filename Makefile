@@ -138,18 +138,12 @@ ifeq ($(arch), $(filter $(arch), x86_64 aarch64))
 	@cd $(out_dir) && tar xf ../../$(alpine)
 endif
 
-$(libc-test):
-ifeq ($(arch), $(filter $(arch), x86_64))
-	cd libc-test && pwd
-	pwd
-endif
-
 $(musl-gcc):
 ifeq ($(arch), $(filter $(arch), x86_64))
 	cd musl-gcc && make all arch=$(arch)
 endif
 
-libc-test: $(libc-test)
+libc-test:
 ifeq ($(arch), $(filter $(arch), x86_64))
 	@echo Building libc-test
 	@mkdir -p $(out_dir)/libc-test
