@@ -121,6 +121,7 @@ all run: $(B)/REPORT
 	grep FAIL $< || echo PASS
 clean:
 	rm -f $(OBJS) $(BINS) $(LIBS) $(B)/common/libtest.a $(B)/common/runtest.exe $(B)/common/options.h $(B)/*/*.err
+	rm config.mak
 cleanall: clean
 	rm -f $(B)/REPORT $(B)/*/REPORT
 $(B)/REPORT:

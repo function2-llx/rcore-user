@@ -28,8 +28,6 @@ musl-gcc_file := $(arch)-linux-musl-cross.tgz
 musl-gcc_version := 6
 musl-gcc := musl-gcc/build/$(arch)/musl-gcc
 
-libc-test := libc-test
-
 musl-rust_version := 1.42.0
 musl-rust_file := rust-$(musl-rust_version)-$(arch)-unknown-linux-musl.tar.gz
 musl-rust := musl-rust/$(musl-rust_file)
@@ -45,7 +43,7 @@ cmake_build_args += -DCMAKE_BUILD_TYPE=Debug
 endif
 
 
-.PHONY: all clean build rust ucore biscuit app bin busybox nginx redis alpine iperf3 musl-gcc musl-rust pre make localtime cmake
+.PHONY: all clean build rust ucore biscuit app bin busybox nginx redis alpine iperf3 musl-gcc musl-rust pre make localtime cmake libc-test
 
 all: build
 
@@ -144,12 +142,9 @@ ifeq ($(arch), $(filter $(arch), x86_64))
 endif
 
 libc-test:
-ifeq ($(arch), $(filter $(arch), x86_64))
 	@echo Building libc-test
 	@mkdir -p $(out_dir)/libc-test
-	cp -r $(libc-test)/* $(out_dir)/usr/
-	@mkdir -p $(out_dir)/etc
-endif
+	cp -r libc-test $(out_dir)
 
 musl-gcc: $(musl-gcc)
 ifeq ($(arch), $(filter $(arch), x86_64))
@@ -178,7 +173,7 @@ ifeq ($(prebuilt), 1)
 build: $(prebuilt_tar)
 	@tar -xzf $< -C build
 else
-build: pre alpine rust ucore biscuit app busybox nginx redis iperf3 test musl-gcc make localtime musl-rust
+build: pre alpine rust ucore biscuit app busybox nginx redis iperf3 test musl-gcc make localtime musl-rust libc-test
 endif
 
 $(prebuilt_tar):
