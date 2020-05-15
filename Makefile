@@ -142,6 +142,7 @@ ifeq ($(arch), $(filter $(arch), x86_64))
 endif
 
 libc-test:
+	# mkdir -p $(out_dir)/dev/shm
 	@echo Building libc-test
 	@mkdir -p $(out_dir)/libc-test
 	cp -r libc-test $(out_dir)

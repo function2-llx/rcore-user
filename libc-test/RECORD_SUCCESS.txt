@@ -5,6 +5,8 @@ clock_gettime
 crypt
 dirname
 dlopen
+sem_init
+sem_open
 env
 fdopen
 fnmatch
@@ -472,6 +474,8 @@ src/common/runtest.exe -w '' src/math/fminl.exe >src/math/fminl.err || echo fmin
 echo fpclassify
 src/common/runtest.exe -w '' src/math/fpclassify.exe >src/math/fpclassify.err || echo fpclassify failed
 echo frexp
+echo run sem_open
+src/common/runtest.exe -w '' src/functional/sem_open.exe >src/functional/sem_open.err || echo sem_open failed
 src/common/runtest.exe -w '' src/math/frexp.exe >src/math/frexp.err || echo frexp failed
 echo frexpf
 src/common/runtest.exe -w '' src/math/frexpf.exe >src/math/frexpf.err || echo frexpf failed
@@ -822,3 +826,5 @@ src/common/runtest.exe -w '' src/regression/wcsstr-false-negative-static.exe >sr
 cat src/api/*.err >src/api/REPORT
 echo run tls_align-static
 src/common/runtest.exe -w '' src/functional/tls_align-static.exe >src/functional/tls_align-static.err || echo tls_align-static failed
+echo run sem_init
+src/common/runtest.exe -w '' src/functional/sem_init.exe >src/functional/sem_init.err || echo sem_init failed

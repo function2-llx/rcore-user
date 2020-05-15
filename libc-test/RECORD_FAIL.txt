@@ -6,8 +6,6 @@ popen
 pthread_cancel-points
 pthread_mutex_pi
 pthread_robust
-sem_init
-sem_open
 setjmp
 spawn
 strptime
@@ -216,10 +214,6 @@ echo run pthread_mutex_pi
 src/common/runtest.exe -w '' src/functional/pthread_mutex_pi.exe >src/functional/pthread_mutex_pi.err || echo pthread_mutex_pi failed
 echo run pthread_robust
 src/common/runtest.exe -w '' src/functional/pthread_robust.exe >src/functional/pthread_robust.err || echo pthread_robust failed
-echo run sem_init
-src/common/runtest.exe -w '' src/functional/sem_init.exe >src/functional/sem_init.err || echo sem_init failed
-echo run sem_open
-src/common/runtest.exe -w '' src/functional/sem_open.exe >src/functional/sem_open.err || echo sem_open failed
 echo run setjmp
 src/common/runtest.exe -w '' src/functional/setjmp.exe >src/functional/setjmp.err || echo setjmp failed
 echo run spawn
