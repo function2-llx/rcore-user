@@ -9,6 +9,13 @@ build and run tests:
 clean up:
 	make clean
 
+to test in rCore:
+in your OS:
+	make
+	rm src/*/*.err
+in rCore:
+	ash runtest.sh
+
 make builds all test binaries and runs them to create
 a REPORT file that contains all build and runtime errors
 (this means that make does not stop at build failures)

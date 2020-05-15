@@ -1,0 +1,57 @@
+pthread_cancel
+pthread_cond
+socket
+flockfile-list
+malloc-brk-fail
+malloc-oom
+pthread_create-oom
+raise-race
+setenv-oom
+pthread_cancel-static
+pthread_cond-static
+socket-static
+flockfile-list-static
+malloc-brk-fail-static
+malloc-oom-static
+pthread_create-oom-static
+raise-race-static
+setenv-oom-static
+
+
+
+echo run pthread_cancel
+src/common/runtest.exe -w '' src/functional/pthread_cancel.exe >src/functional/pthread_cancel.err || echo pthread_cancel failed
+echo run pthread_cond
+src/common/runtest.exe -w '' src/functional/pthread_cond.exe >src/functional/pthread_cond.err || echo pthread_cond failed
+echo run socket
+src/common/runtest.exe -w '' src/functional/socket.exe >src/functional/socket.err || echo socket failed
+echo run flockfile-list
+src/common/runtest.exe -w '' src/regression/flockfile-list.exe >src/regression/flockfile-list.err || echo flockfile-list failed
+echo run malloc-brk-fail
+src/common/runtest.exe -w '' src/regression/malloc-brk-fail.exe >src/regression/malloc-brk-fail.err || echo malloc-brk-fail failed
+echo run malloc-oom
+src/common/runtest.exe -w '' src/regression/malloc-oom.exe >src/regression/malloc-oom.err || echo malloc-oom failed
+echo run pthread_create-oom
+src/common/runtest.exe -w '' src/regression/pthread_create-oom.exe >src/regression/pthread_create-oom.err || echo pthread_create-oom failed
+echo run raise-race
+src/common/runtest.exe -w '' src/regression/raise-race.exe >src/regression/raise-race.err || echo raise-race failed
+echo run setenv-oom
+src/common/runtest.exe -w '' src/regression/setenv-oom.exe >src/regression/setenv-oom.err || echo setenv-oom failed
+echo run pthread_cancel-static
+src/common/runtest.exe -w '' src/functional/pthread_cancel-static.exe >src/functional/pthread_cancel-static.err || echo pthread_cancel-static failed
+echo run pthread_cond-static
+src/common/runtest.exe -w '' src/functional/pthread_cond-static.exe >src/functional/pthread_cond-static.err || echo pthread_cond-static failed
+echo run socket-static
+src/common/runtest.exe -w '' src/functional/socket-static.exe >src/functional/socket-static.err || echo socket-static failed
+echo run flockfile-list-static
+src/common/runtest.exe -w '' src/regression/flockfile-list-static.exe >src/regression/flockfile-list-static.err || echo flockfile-list-static failed
+echo run malloc-brk-fail-static
+src/common/runtest.exe -w '' src/regression/malloc-brk-fail-static.exe >src/regression/malloc-brk-fail-static.err || echo malloc-brk-fail-static failed
+echo run malloc-oom-static
+src/common/runtest.exe -w '' src/regression/malloc-oom-static.exe >src/regression/malloc-oom-static.err || echo malloc-oom-static failed
+echo run pthread_create-oom-static
+src/common/runtest.exe -w '' src/regression/pthread_create-oom-static.exe >src/regression/pthread_create-oom-static.err || echo pthread_create-oom-static failed
+echo run raise-race-static
+src/common/runtest.exe -w '' src/regression/raise-race-static.exe >src/regression/raise-race-static.err || echo raise-race-static failed
+echo run setenv-oom-static
+src/common/runtest.exe -w '' src/regression/setenv-oom-static.exe >src/regression/setenv-oom-static.err || echo setenv-oom-static failed
