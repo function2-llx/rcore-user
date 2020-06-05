@@ -1,6 +1,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include <string.h>
+#include <stdio.h>
 #include "test.h"
 
 #define TESTC(c, m) ( (c) || (t_error("%s failed (" m ")\n", #c), 0) )
@@ -66,7 +67,9 @@ int main(void)
 	void *res;
 	int foo[4];
 
+	fprintf(stderr, "before creating\n");
 	TESTR(r, sem_init(&sem1, 0, 0), "creating semaphore");
+	fprintf(stderr, "create semaphore\n");
 
 	/* Asynchronous cancellation */
 	TESTR(r, pthread_create(&td, 0, start_async, &sem1), "failed to create thread");
