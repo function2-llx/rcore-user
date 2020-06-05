@@ -43,9 +43,7 @@ rewind-clear-error-static
 rlimit-open-files-static
 statvfs-static
 pthread_cancel-sem_wait
-sigaltstack
 pthread_cancel-sem_wait-static
-sigaltstack-static
 pthread_cancel
 pthread_cond
 socket

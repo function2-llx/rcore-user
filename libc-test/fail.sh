@@ -16,8 +16,6 @@ echo spawn
 src/common/runtest.exe -w '' src/functional/spawn.exe >src/functional/spawn.err || echo spawn failed
 echo strptime
 src/common/runtest.exe -w '' src/functional/strptime.exe >src/functional/strptime.err || echo strptime failed
-echo utime
-src/common/runtest.exe -w '' src/functional/utime.exe >src/functional/utime.err || echo utime failed
 echo vfork
 src/common/runtest.exe -w '' src/functional/vfork.exe >src/functional/vfork.err || echo vfork failed
 echo fmal
@@ -60,8 +58,6 @@ echo spawn-static
 src/common/runtest.exe -w '' src/functional/spawn-static.exe >src/functional/spawn-static.err || echo spawn-static failed
 echo strptime-static
 src/common/runtest.exe -w '' src/functional/strptime-static.exe >src/functional/strptime-static.err || echo strptime-static failed
-echo utime-static
-src/common/runtest.exe -w '' src/functional/utime-static.exe >src/functional/utime-static.err || echo utime-static failed
 echo vfork-static
 src/common/runtest.exe -w '' src/functional/vfork-static.exe >src/functional/vfork-static.err || echo vfork-static failed
 echo daemon-failure-static
@@ -80,7 +76,3 @@ echo rlimit-open-files-static
 src/common/runtest.exe -w '' src/regression/rlimit-open-files-static.exe >src/regression/rlimit-open-files-static.err || echo rlimit-open-files-static failed
 echo statvfs-static
 src/common/runtest.exe -w '' src/regression/statvfs-static.exe >src/regression/statvfs-static.err || echo statvfs-static failed
-echo sigaltstack
-src/common/runtest.exe -w '' src/regression/sigaltstack.exe >src/regression/sigaltstack.err || echo sigaltstack failed
-echo sigaltstack-static
-src/common/runtest.exe -w '' src/regression/sigaltstack-static.exe >src/regression/sigaltstack-static.err || echo sigaltstack-static failed

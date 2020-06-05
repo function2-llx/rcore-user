@@ -814,3 +814,11 @@ echo strtold-static
 src/common/runtest.exe -w '' src/functional/strtold-static.exe >src/functional/strtold-static.err || echo strtold-static failed
 echo sigreturn-static
 src/common/runtest.exe -w '' src/regression/sigreturn-static.exe >src/regression/sigreturn-static.err || echo sigreturn-static failed
+echo utime
+src/common/runtest.exe -w '' src/functional/utime.exe >src/functional/utime.err || echo utime failed
+echo run utime-static
+src/common/runtest.exe -w '' src/functional/utime-static.exe >src/functional/utime-static.err || echo utime-static failed
+echo sigaltstack
+src/common/runtest.exe -w '' src/regression/sigaltstack.exe >src/regression/sigaltstack.err || echo sigaltstack failed
+echo sigaltstack-static
+src/common/runtest.exe -w '' src/regression/sigaltstack-static.exe >src/regression/sigaltstack-static.err || echo sigaltstack-static failed

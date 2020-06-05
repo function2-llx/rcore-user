@@ -406,3 +406,7 @@ strtof-static
 strtold-static
 sigreturn-static
 getpwnam_r-crash
+utime
+utime-static
+sigaltstack
+sigaltstack-static
